@@ -5,8 +5,10 @@ import { AiFillGithub } from "react-icons/ai";
 const PokemonsPage = () => {
    return (
       <Layout title="Pokemons">
-         <div className="">
-            <h1>React Pokédex</h1>
+         <div className="flex items-center justify-center lg:justify-start">
+            <h1 className="text-3xl lg:text-5xl font-semibold sm:text-left inline-block">
+               React Pokédex
+            </h1>
             <a
                href="https://github.com/fadhilradh/react-pokedex"
                target="_blank"
