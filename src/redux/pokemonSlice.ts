@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Pokemon } from "./pokemon.type";
 import { SliceStatus } from "../globals";
-import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
+import {
+   statusHandlerReducer,
+   transformSpriteToBaseImage,
+   wrapReduxAsyncHandler,
+} from "./utilities";
+import fromApi from "../services/fromApi";
 
 type SliceState = {
    data: (Pokemon | null)[];
@@ -9,6 +14,8 @@ type SliceState = {
       state: SliceStatus;
    };
 };
+
+export const PAGINATION_SIZE = 6;
 
 const initialState: SliceState = {
    data: [],
@@ -54,6 +61,17 @@ const statusHandler = { initialize, error, success };
 export const getPokemons = wrapReduxAsyncHandler(
    statusHandler,
    async (dispatch, { page, cachedPokemons, pokemons }) => {
+      const size = PAGINATION_SIZE - (pokemons.length % PAGINATION_SIZE);
+      const results = cachedPokemons.slice(page, page + size);
       dispatch(initializePokemonsReducer({ size }));
+      // const promises = items.map((e) => somethingAsync(e));
+      // for await (const res of promises) {
+      // }
+
+      for await (const [index, { url }] of results.entries()) {
+         const pokemonId = Number(url.split("/").slice(-2)[0]);
+         const pokemon = await fromApi.getPokemonByNameOrId({ id: pokemonId });
+         const pokemonImageUrl = transformSpriteToBaseImage();
+      }
    }
 );

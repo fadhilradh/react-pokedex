@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 import { ActionCreatorWithPayload, PayloadAction } from "@reduxjs/toolkit";
 
 import { SliceStatus } from "../globals";
+import { leftPad } from "../utils/leftPad";
 
 export const statusHandlerReducer = {
    initialize: (state: any, action: PayloadAction) => {
@@ -34,3 +35,15 @@ export const wrapReduxAsyncHandler =
          .then(() => dispatch(statusHandler.success({})))
          .catch((err) => console.error(err));
    };
+
+type baseSpriteParams = {
+   pokemonId: number;
+   baseUrl: string;
+};
+
+export async function transformSpriteToBaseImage({
+   pokemonId,
+   baseUrl,
+}: baseSpriteParams) {
+   return baseUrl + leftPad({ number: pokemonId, targetLength: 3 }) + ".png";
+}
