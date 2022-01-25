@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { pokemonsReducer } from "./pokemonSlice";
 
 export const rootReducer = combineReducers({
    // cachedPokemons: cachedPokemonsReducer,
-   // pokemons: pokemonsReducer,
+   pokemons: pokemonsReducer,
    // species: speciesReducer,
    // evolutionChain: evolutionChainReducer,
 });

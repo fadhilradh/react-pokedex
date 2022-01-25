@@ -7,6 +7,9 @@ import {
    wrapReduxAsyncHandler,
 } from "./utilities";
 import fromApi from "../services/fromApi";
+import { RootState } from "./store";
+import { baseImageUrl } from "../services/axios";
+import { camelCaseObject } from "../utils/camelCaseObject";
 
 type SliceState = {
    data: (Pokemon | null)[];
@@ -16,6 +19,7 @@ type SliceState = {
 };
 
 export const PAGINATION_SIZE = 6;
+export const pokemonsSelector = (state: RootState) => state.pokemons;
 
 const initialState: SliceState = {
    data: [],
@@ -53,8 +57,13 @@ const pokemonsSlice = createSlice({
 });
 
 export const pokemonsReducer = pokemonsSlice.reducer;
-export const { initializePokemonsReducer, initialize, error, success } =
-   pokemonsSlice.actions;
+export const {
+   initializePokemonsReducer,
+   initialize,
+   error,
+   success,
+   getPokemonsReducer,
+} = pokemonsSlice.actions;
 
 const statusHandler = { initialize, error, success };
 
@@ -64,14 +73,27 @@ export const getPokemons = wrapReduxAsyncHandler(
       const size = PAGINATION_SIZE - (pokemons.length % PAGINATION_SIZE);
       const results = cachedPokemons.slice(page, page + size);
       dispatch(initializePokemonsReducer({ size }));
-      // const promises = items.map((e) => somethingAsync(e));
-      // for await (const res of promises) {
-      // }
 
       for await (const [index, { url }] of results.entries()) {
          const pokemonId = Number(url.split("/").slice(-2)[0]);
          const pokemon = await fromApi.getPokemonByNameOrId({ id: pokemonId });
-         const pokemonImageUrl = transformSpriteToBaseImage();
+         const pokemonImageUrl = transformSpriteToBaseImage({
+            pokemonId: pokemon.id,
+            baseUrl: baseImageUrl,
+         });
+
+         dispatch(
+            getPokemonsReducer({
+               pokemon: {
+                  ...camelCaseObject(pokemon),
+                  sprites: {
+                     frontDefault: pokemonImageUrl,
+                  },
+               },
+               size,
+               index,
+            })
+         );
       }
    }
 );

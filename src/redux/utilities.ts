@@ -27,8 +27,8 @@ export const wrapReduxAsyncHandler =
       statusHandler: StatusHandler,
       callback: (dispatch: Dispatch<any>, args: any) => Promise<void>
    ) =>
-   (args) =>
-   async (dispatch) => {
+   (args?: any) =>
+   async (dispatch: Dispatch<any>) => {
       dispatch(statusHandler.initialize({}));
 
       callback(dispatch, args)
@@ -36,7 +36,7 @@ export const wrapReduxAsyncHandler =
          .catch((err) => console.error(err));
    };
 
-type baseSpriteParams = {
+type baseSprite = {
    pokemonId: number;
    baseUrl: string;
 };
@@ -44,6 +44,6 @@ type baseSpriteParams = {
 export async function transformSpriteToBaseImage({
    pokemonId,
    baseUrl,
-}: baseSpriteParams) {
+}: baseSprite) {
    return baseUrl + leftPad({ number: pokemonId, targetLength: 3 }) + ".png";
 }

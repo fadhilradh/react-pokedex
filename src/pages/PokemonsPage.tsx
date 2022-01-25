@@ -1,8 +1,16 @@
-import React from "react";
-import Layout from "../components/Layouts/Layout";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { AiFillGithub } from "react-icons/ai";
 
+import { pokemonsSelector, getPokemons } from "../redux/pokemonSlice";
+import Layout from "../components/Layouts/Layout";
+
 const PokemonsPage = () => {
+   const pokemons = useSelector(pokemonsSelector);
+
+   useEffect(() => {
+      getPokemons({});
+   });
    return (
       <Layout title="Pokemons">
          <div className="flex items-center justify-center lg:justify-start">

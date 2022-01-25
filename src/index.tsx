@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { HelmetProvider, Helmet } from "react-helmet-async";
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { HelmetProvider, Helmet } from "react-helmet-async";
-import { Provider } from "react-redux";
+import store from "./redux/store";
 
 ReactDOM.render(
    <React.StrictMode>
@@ -17,9 +19,9 @@ ReactDOM.render(
                content="a simple pokédex for your pokemon needs."
             />
          </Helmet>
-         {/* <Provider store={store}> */}
-         <App />
-         {/* </Provider> */}
+         <Provider store={store}>
+            <App />
+         </Provider>
       </HelmetProvider>
    </React.StrictMode>,
    document.getElementById("root")
