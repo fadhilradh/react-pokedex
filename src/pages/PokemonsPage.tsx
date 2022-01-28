@@ -4,13 +4,19 @@ import { AiFillGithub } from "react-icons/ai";
 
 import { pokemonsSelector, getPokemons } from "../redux/pokemonSlice";
 import Layout from "../components/Layouts/Layout";
+import { cachedPokemonsSelector } from "../redux/cachedPokemonsSlice";
 
 const PokemonsPage = () => {
    const pokemons = useSelector(pokemonsSelector);
+   const cachedPokemons = useSelector(cachedPokemonsSelector);
 
    useEffect(() => {
-      getPokemons({});
-   });
+      getPokemons({
+         page: 1,
+         cachedPokemons: cachedPokemons.data,
+         pokemons: pokemons.data,
+      });
+   }, []);
    return (
       <Layout title="Pokemons">
          <div className="flex items-center justify-center lg:justify-start">

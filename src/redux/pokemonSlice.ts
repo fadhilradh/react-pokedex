@@ -67,6 +67,7 @@ export const {
 
 const statusHandler = { initialize, error, success };
 
+// action
 export const getPokemons = wrapReduxAsyncHandler(
    statusHandler,
    async (dispatch, { page, cachedPokemons, pokemons }) => {
